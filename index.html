@@ -2,7 +2,11 @@
     <head>
     <title>Gjestebok</title>
     <style>
-   
+        #hmm {
+            border-radius: 20px;
+            border-style: groove;
+            border-width: thick;
+        }
     </style>
 </head>
 <body>
@@ -76,7 +80,7 @@
             function visDatabase_hjelpfunksjon(snapshot){
                 let timestamp = snapshot.key;
                 let navn_og_tekst = snapshot.val();
-                posts.innerHTML += `<div>Navn: ${navn_og_tekst.navn} - Beskjed: ${navn_og_tekst.beskjed}</div>`;
+                posts.innerHTML += `<div>Navn: ${navn_og_tekst.navn}</div><br><dvi id="hmm"> ${navn_og_tekst.beskjed}</div>`;
             }
         database.on("child_added", visDatabase_hjelpfunksjon);
         } 
