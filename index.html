@@ -1,0 +1,87 @@
+<html>
+    <head>
+    <title>Gjestebok</title>
+    <style>
+   
+    </style>
+</head>
+<body>
+    <div id="box">
+    <form name="myform">
+        <input type="text" id="txtNavn" name="txtNavn"><br>
+        <input type="text" id="txtMelding" name="txtMelding"><br>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+        <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
+        </form>
+        <div>
+            <input type="button" class="knapp" name="" value="Send inn" onclick="sendInn()">
+            <input type="button" class="knapp" name="" value="Hent ut" onclick="visDatabase()">
+        </div>
+        <br>
+        <div id="gjestebok"></div>
+        <div id="posts"></div>
+        
+    </form>
+    </div>
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-database.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-analytics.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyC4V5jP39XkKAryxmqErEo977Y3VxNRwwI",
+    authDomain: "jonas-6a488.firebaseapp.com",
+    databaseURL: "https://jonas-6a488.firebaseio.com",
+    projectId: "jonas-6a488",
+    storageBucket: "jonas-6a488.appspot.com",
+    messagingSenderId: "653044045038",
+    appId: "1:653044045038:web:e3892a05ec51043cf28fff",
+    measurementId: "G-R5T1KGQGDW"
+  };
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+    <script type="text/javascript">
+        let txtNavn = document.querySelector("#txtNavn")
+        let txtMelding = document.querySelector("#txtMelding")
+        let gjestebok = document.querySelector("#gjestebok")
+        
+        let db = firebase.database()
+        let database = db.ref("database")
+        
+        
+        function sendInn(){
+            let dato = new Date()
+            let navn = txtNavn.value
+            let beskjed = txtMelding.value
+            let tid = dato.getFullYear()+"0"+dato.getMonth()+""+dato.getDate()+""+dato.getHours()+""+dato.getMinutes()+""+dato.getSeconds()+""+dato.getMilliseconds()+navn.value
+            let nybruker = database.child(tid)
+            
+            nybruker.set(
+            {
+                beskjed : beskjed,
+                navn : navn
+            }
+            )
+            console.log(`Navn: ${navn} Melding: ${melding}`)
+            gjestebok.innerHTML+=`<div>Navnet mitt er ${navn}, og jeg ville si ${melding}`
+            window.alert("Sendt")
+        }
+        function visDatabase(){
+            console.log("Hey")
+            function visDatabase_hjelpfunksjon(snapshot){
+                let timestamp = snapshot.key;
+                let navn_og_tekst = snapshot.val();
+                posts.innerHTML += `<div>Navn: ${navn_og_tekst.navn} - Beskjed: ${navn_og_tekst.beskjed}</div>`;
+            }
+        database.on("child_added", visDatabase_hjelpfunksjon);
+        } 
+       
+    </script>
+
+</body>
+</html>
