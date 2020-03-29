@@ -3,22 +3,31 @@
     <title>Gjestebok</title>
     <style>
         #hmm {
-            border-radius: 5px;
+            border-radius: 10px;
             border-style: groove;
             border-width: thick;
-            width: 200px;
-            height: 100px;
+            width: 100px;
+            height: 50px;
+            padding:0px;
+        }
+        #inher {
+            padding: 0px;
+            border: 0px;
+        }
+        #gjestebok {
+            padding: 0px;
+            border: 0px;
         }
     </style>
 </head>
 <body>
     <div id="box">
     <form name="myform">
-        <input type="text" id="txtNavn" name="txtNavn"><br>
-        <input type="text" id="txtMelding" name="txtMelding"><br>
-        <form action="upload.php" method="post" enctype="multipart/form-data">
-        <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
-        </form>
+        Tittel: <input type="text" id="txtBookNavn" name="txtBookNavn"><br>
+        Utgivelsår: <input type="text" id="txtÅr" name="txtÅr"><br>
+        Navn på forfatter: <input type="text" id="txtForfatter" name="txtForfatter"><br>
+        Forlag: <input type="text" id="txtForlag" name="txtForlag"><br>
+        Vurdering av boken: <input type="text" id="txtVurdering" name="txtVurdering"><br>
         <div>
             <input type="button" class="knapp" name="" value="Send inn" onclick="sendInn()">
             <input type="button" class="knapp" name="" value="Hent ut" onclick="visDatabase()">
@@ -52,8 +61,11 @@
   firebase.analytics();
 </script>
     <script type="text/javascript">
-        let txtNavn = document.querySelector("#txtNavn")
-        let txtMelding = document.querySelector("#txtMelding")
+        let txtBookNavn = document.querySelector("#txtBookNavn")
+        let txtÅr = document.querySelector("#txtÅr")
+        let txtForfatter = document.querySelector("#txtForfatter")
+        let txtForlag = document.querySelector("#txtForlag")
+        let txtVurdering = document.querySelector("#txtVurdering")
         let gjestebok = document.querySelector("#gjestebok")
         
         let db = firebase.database()
@@ -62,19 +74,23 @@
         
         function sendInn(){
             let dato = new Date()
-            let navn = txtNavn.value
-            let beskjed = txtMelding.value
+            let navn = txtBookNavn.value
+            let år = txtÅr.value
+            let forfatter = txtForfatter.value
+            let forlag = txtForlag.value
+            let vurdering = txtVurdering.value
             let tid = dato.getFullYear()+"0"+dato.getMonth()+""+dato.getDate()+""+dato.getHours()+""+dato.getMinutes()+""+dato.getSeconds()+""+dato.getMilliseconds()+navn.value
             let nybruker = database.child(tid)
             
             nybruker.set(
             {
-                beskjed : beskjed,
-                navn : navn
+                navn : navn,
+                år : år,
+                forfatter : forfatter,
+                forlag : forlag,
+                vurdering : vurdering,
             }
             )
-            console.log(`Navn: ${navn} Melding: ${melding}`)
-            gjestebok.innerHTML+=`<div>Navnet mitt er ${navn}, og jeg ville si ${melding}`
             window.alert("Sendt")
         }
         function visDatabase(){
@@ -82,7 +98,7 @@
             function visDatabase_hjelpfunksjon(snapshot){
                 let timestamp = snapshot.key;
                 let navn_og_tekst = snapshot.val();
-                posts.innerHTML += `<div>Navn: ${navn_og_tekst.navn}</div><br><dvi id="hmm"> ${navn_og_tekst.beskjed}</div>`;
+                posts.innerHTML += `<div id="inher">Navn: ${navn_og_tekst.navn}</div><br><div id="hmm"> ${navn_og_tekst.beskjed}</div><br><br>`;
             }
         database.on("child_added", visDatabase_hjelpfunksjon);
         } 
